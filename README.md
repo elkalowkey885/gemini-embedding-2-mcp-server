@@ -6,7 +6,8 @@ A powerful Model Context Protocol (MCP) server that connects your local document
 - **Local Vector Database**: Uses ChromaDB entirely locally to index your document embeddings.
 - **Enterprise-Grade Embeddings**: Uses `gemini-embedding-2-preview` with specialized Task Types (`RETRIEVAL_DOCUMENT`) and MRL dimensionality optimization.
 - **Ultimate Multimodality**: Natively scans, embeds, and mathematically retrieves **Images** (`.jpg`, `.png`, `.webp`), **Video** (`.mp4`), and **Audio** (`.mp3`, `.wav`)! Search your memories visually and sonically.
-- **Dynamic File Indexing**: Read, parse, and embed PDF, TXT, MD, DOCX files directly from Claude's interface.
+- **Visual PDF RAG**: Parses each page of a PDF as a high-quality image. Gemini semantically embeds the charts, plots, and layout visually, while returning the actual extracted text to Claude during search. It's the ultimate hybrid!
+- **Dynamic File Indexing**: Read, parse, and embed TXT, MD, DOCX files directly from Claude's interface.
 - **Semantic Search**: Native MCP tool for lighting-fast semantic retrieval over your multimodal files.
 
 ## Installation

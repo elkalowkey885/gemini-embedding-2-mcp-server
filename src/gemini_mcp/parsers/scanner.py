@@ -40,13 +40,6 @@ def extract_text_from_file(file_path: pathlib.Path) -> str:
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                 return f.read()
                 
-        elif ext == '.pdf' and fitz is not None:
-            doc = fitz.open(file_path)
-            text = ""
-            for page in doc:
-                text += page.get_text() + "\n"
-            return text
-            
         elif ext == '.docx' and docx is not None:
             doc = docx.Document(file_path)
             return "\n".join([para.text for para in doc.paragraphs])
@@ -125,7 +118,37 @@ def scan_directory(directory_path: str, chunk_size: int = 1000, overlap: int = 2
                     logger.error(f"Error reading media {file_path}: {e}")
                 continue
 
-            # Process Text Files
+            # Process PDF Files Visually (Page by Page)
+            if ext == '.pdf' and fitz is not None:
+                try:
+                    doc = fitz.open(file_path)
+                    for page_num in range(len(doc)):
+                        page = doc.load_page(page_num)
+                        
+                        # Render the PDF page to a high-quality Image (PNG)
+                        # This allows Gemini 2 to visually embed plots, charts, and exact layout!
+                        pix = page.get_pixmap(dpi=150)
+                        png_bytes = pix.tobytes("png")
+                        
+                        # Extract raw text for ChromaDB storage so Claude gets the actual text back upon search
+                        page_text = page.get_text()
+                        
+                        yield {
+                            "raw_data": png_bytes,
+                            "is_media": True,
+                            "mime_type": "image/png",
+                            "text": f"--- Page {page_num + 1} from {file_path.name} ---\n{page_text}",
+                            "metadata": {
+                                "source": str(file_path.absolute()),
+                                "chunk_index": page_num,
+                                "type": "pdf_visual_page"
+                            }
+                        }
+                except Exception as e:
+                    logger.error(f"Error processing visual PDF {file_path}: {e}")
+                continue
+
+            # Process Standard Text Files (.txt, .md, .docx, .csv)
             text = extract_text_from_file(file_path)
             if not text.strip():
                 continue
