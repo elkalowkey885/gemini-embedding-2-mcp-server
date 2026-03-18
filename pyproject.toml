@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.scripts]
-gemini-mcp = "gemini_mcp.server:main"
+gemini-embedding-2-mcp = "gemini_mcp.server:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -60,13 +60,16 @@ def extract_text_from_file(file_path: pathlib.Path) -> str:
 
 def scan_directory(directory_path: str, chunk_size: int = 1000, overlap: int = 200) -> Generator[Dict[str, Any], None, None]:
     """
-    Recursively scans a directory, extracts text from supported files, and yields chunks.
-    Yields dicts with: {'text': str, 'metadata': {'source': str, 'chunk_index': int}}
+    Recursively scans a directory, extracts text from supported files or raw bytes from images, 
+    and yields content ready for multimodal embedding.
+    Yields dicts with: {'raw_data': Any, 'is_image': bool, 'metadata': {'source': str, 'chunk_index': int, 'type': str}}
     """
     base_dir = pathlib.Path(directory_path)
     if not base_dir.exists() or not base_dir.is_dir():
         logger.error(f"Directory not found: {directory_path}")
         return
+        
+    image_extensions = {'.jpg', '.jpeg', '.png', '.webp'}
         
     for root, _, files in os.walk(base_dir):
         # Skip hidden directories like .git
@@ -79,14 +82,37 @@ def scan_directory(directory_path: str, chunk_size: int = 1000, overlap: int = 2
                 continue
                 
             file_path = pathlib.Path(root) / file
+            ext = file_path.suffix.lower()
             
-            # Simple size check to avoid absolutely massive binaries disguised as text
+            # Simple size check to avoid absolutely massive binaries
             try:
                 if file_path.stat().st_size > 50 * 1024 * 1024:  # 50 MB limit
                     continue
             except Exception:
                 continue
 
+            # Process Image Files
+            if ext in image_extensions:
+                try:
+                    with open(file_path, "rb") as img_file:
+                        mime_type = "image/jpeg"
+                        if ext == ".png": mime_type = "image/png"
+                        elif ext == ".webp": mime_type = "image/webp"
+                        
+                        yield {
+                            "raw_data": img_file.read(),
+                            "is_image": True,
+                            "metadata": {
+                                "source": str(file_path.absolute()),
+                                "chunk_index": 0,
+                                "type": "image"
+                            },
+                        }
+                except Exception as e:
+                    logger.error(f"Error reading image {file_path}: {e}")
+                continue
+
+            # Process Text Files
             text = extract_text_from_file(file_path)
             if not text.strip():
                 continue
@@ -95,9 +121,11 @@ def scan_directory(directory_path: str, chunk_size: int = 1000, overlap: int = 2
             for i, chunk in enumerate(chunks):
                 if chunk.strip():
                     yield {
-                        "text": chunk,
+                        "raw_data": chunk,
+                        "is_image": False,
                         "metadata": {
                             "source": str(file_path.absolute()),
-                            "chunk_index": i
+                            "chunk_index": i,
+                            "type": "text"
                         }
                     }

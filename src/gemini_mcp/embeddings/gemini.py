@@ -22,24 +22,27 @@ class GeminiEmbeddingClient:
         # Initialize the new google-genai SDK client
         self.client = genai.Client(api_key=self.api_key)
         
-    def embed_texts(self, texts: List[str]) -> List[List[float]]:
+    def embed_items(self, items: List[Any]) -> List[List[float]]:
         """
-        Sends a batch of text chunks to Gemini to get vector embeddings.
+        Sends a batch of items (strings, or Image bytes represented as types.Part) 
+        to Gemini Tracking 2 to get vector embeddings. 
         Returns a list of float arrays (the vectors).
         """
-        if not texts:
+        if not items:
             return []
             
         try:
             # We use embed_content with the required model.
-            # Depending on SDK version, you may pass an array of content
+            embeddings = []
+            
+            # Since the API sometimes struggles with deeply nested mixed batches or large parallel payloads, 
+            # we iterate through the batch. The `embed_content` takes `contents`.
+            # We can pass them as a list to the SDK
             response = self.client.models.embed_content(
                 model=EMBEDDING_MODEL,
-                contents=texts
+                contents=items
             )
             
-            # The response contains embeddings for each string
-            embeddings = []
             for emb in response.embeddings:
                 embeddings.append(emb.values)
                 

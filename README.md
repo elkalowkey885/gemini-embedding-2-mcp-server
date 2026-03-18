@@ -5,7 +5,8 @@ A powerful Model Context Protocol (MCP) server that connects your local document
 ## Features
 - **Local Vector Database**: Uses ChromaDB entirely locally to index your document embeddings.
 - **Multimodal Embedding Power**: Powered by `gemini-embedding-2-preview`, Google's latest embedding model.
-- **Dynamic Indexing**: Read, parse, and embed PDF, TXT, MD, and DOCX files directly from Claude's interface.
+- **Native Image Search**: Scans and mathematically embeds `.jpg`, `.png`, and `.webp` graphics. Search context visually!
+- **Dynamic Indexing**: Read, parse, and embed PDF, TXT, MD, DOCX files directly from Claude's interface.
 - **Semantic Search**: Native MCP tool for lighting-fast semantic retrieval over your documents.
 
 ## Installation
@@ -30,8 +31,8 @@ uv sync
 ```json
 {
   "mcpServers": {
-    "gemini-mcp": {
-      "command": "/path/to/gemini-mcp-embedding-server/.venv/bin/gemini-mcp",
+    "gemini-embedding-2-mcp": {
+      "command": "/path/to/gemini-mcp-embedding-server/.venv/bin/gemini-embedding-2-mcp",
       "args": [],
       "env": {
         "GEMINI_API_KEY": "your-api-key-here"
@@ -44,9 +45,11 @@ uv sync
 ## Available MCP Tools
 
 Once connected, Claude will have access to:
-- `index_directory(path: str)`: Scan and structurally embed a local folder.
-- `search_my_documents(query: str, limit: int)`: Perform semantic search over your indexed documents.
-- `list_indexed_directories()`: See what folders have been embedded.
+- `index_directory(path: str)`: Scan and structurally embed a local folder (reads text AND images).
+- `search_my_documents(query: str, limit: int)`: Perform semantic search over your indexed documents and pictures.
+- `list_indexed_directories()`: See what files have been embedded.
+- `sync_indexed_directories()`: Automatically re-indexes known folders to capture newly added files.
+- `remove_directory_from_index(path: str)`: Remove a folder's vectors from your ChromaDB instance.
 
 ## License
 MIT

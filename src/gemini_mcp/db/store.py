@@ -35,7 +35,8 @@ class ChromaStore:
             doc_id = f"{source}::{chunk_idx}"
             
             ids.append(doc_id)
-            documents.append(chunk["text"])
+            # Add a fallback text for images so they don't break chromadb requirements
+            documents.append(chunk.get("text", f"[{chunk['metadata'].get('type', 'document')}] {source}"))
             metadatas.append(chunk["metadata"])
             
         # We use upsert so we overwrite if it already exists (updating)
@@ -45,6 +46,27 @@ class ChromaStore:
             documents=documents,
             metadatas=metadatas
         )
+
+    def delete_directory(self, directory_path: str) -> int:
+        """
+        Deletes all chunks that originated from within a specific directory.
+        Returns the number of deleted vectors.
+        """
+        # We have to fetch all sources, find matching ones, and delete by ID since Chroma
+        # metadata filtering on string startswith is limited.
+        data = self.collection.get(include=["metadatas"])
+        if not data or not data["metadatas"]:
+            return 0
+            
+        ids_to_delete = []
+        for doc_id, meta in zip(data["ids"], data["metadatas"]):
+            if meta and "source" in meta and meta["source"].startswith(directory_path):
+                ids_to_delete.append(doc_id)
+                
+        if ids_to_delete:
+            self.collection.delete(ids=ids_to_delete)
+            
+        return len(ids_to_delete)
         
     def query(self, query_embedding: List[float], n_results: int = 5) -> List[Dict[str, Any]]:
         """
