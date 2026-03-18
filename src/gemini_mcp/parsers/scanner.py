@@ -69,7 +69,11 @@ def scan_directory(directory_path: str, chunk_size: int = 1000, overlap: int = 2
         logger.error(f"Directory not found: {directory_path}")
         return
         
-    image_extensions = {'.jpg', '.jpeg', '.png', '.webp'}
+    media_extensions = {
+        '.jpg', '.jpeg', '.png', '.webp', # Images
+        '.mp4',                           # Video
+        '.mp3', '.wav', '.aiff', '.aac'   # Audio
+    }
         
     for root, _, files in os.walk(base_dir):
         # Skip hidden directories like .git
@@ -91,25 +95,34 @@ def scan_directory(directory_path: str, chunk_size: int = 1000, overlap: int = 2
             except Exception:
                 continue
 
-            # Process Image Files
-            if ext in image_extensions:
+            # Process Media Files (Images, Video, Audio)
+            if ext in media_extensions:
                 try:
-                    with open(file_path, "rb") as img_file:
-                        mime_type = "image/jpeg"
-                        if ext == ".png": mime_type = "image/png"
-                        elif ext == ".webp": mime_type = "image/webp"
+                    with open(file_path, "rb") as media_file:
+                        mime_type = "application/octet-stream"
+                        media_type = "media"
+                        
+                        if ext in ['.jpg', '.jpeg']: mime_type, media_type = "image/jpeg", "image"
+                        elif ext == ".png": mime_type, media_type = "image/png", "image"
+                        elif ext == ".webp": mime_type, media_type = "image/webp", "image"
+                        elif ext == ".mp4": mime_type, media_type = "video/mp4", "video"
+                        elif ext == ".mp3": mime_type, media_type = "audio/mp3", "audio"
+                        elif ext == ".wav": mime_type, media_type = "audio/wav", "audio"
+                        elif ext == ".aiff": mime_type, media_type = "audio/aiff", "audio"
+                        elif ext == ".aac": mime_type, media_type = "audio/aac", "audio"
                         
                         yield {
-                            "raw_data": img_file.read(),
-                            "is_image": True,
+                            "raw_data": media_file.read(),
+                            "is_media": True,
+                            "mime_type": mime_type,
                             "metadata": {
                                 "source": str(file_path.absolute()),
                                 "chunk_index": 0,
-                                "type": "image"
+                                "type": media_type
                             },
                         }
                 except Exception as e:
-                    logger.error(f"Error reading image {file_path}: {e}")
+                    logger.error(f"Error reading media {file_path}: {e}")
                 continue
 
             # Process Text Files
@@ -122,7 +135,8 @@ def scan_directory(directory_path: str, chunk_size: int = 1000, overlap: int = 2
                 if chunk.strip():
                     yield {
                         "raw_data": chunk,
-                        "is_image": False,
+                        "is_media": False,
+                        "mime_type": "text/plain",
                         "metadata": {
                             "source": str(file_path.absolute()),
                             "chunk_index": i,

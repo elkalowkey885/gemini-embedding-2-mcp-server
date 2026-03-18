@@ -36,7 +36,7 @@ from google.genai import types
 async def index_directory(directory_path: str) -> str:
     """
     Scans a local directory, extracts text from files (PDF, DOCX, TXT, MD) AND 
-    raw image bytes (.jpg, .png, .webp), generates semantic embeddings using 
+    raw video/audio/image bytes, generates semantic embeddings using 
     Gemini 2 and stores them for searching.
     """
     try:
@@ -55,11 +55,8 @@ async def index_directory(directory_path: str) -> str:
         for item in scan_directory(directory_path):
             chunks.append(item)
             
-            if item.get("is_image", False):
-                source = item["metadata"]["source"]
-                ext = source.split(".")[-1].lower()
-                mime = f"image/{ext}" if ext in ["png", "webp"] else "image/jpeg"
-                items_to_embed.append(types.Part.from_bytes(data=item["raw_data"], mime_type=mime))
+            if item.get("is_media", False):
+                items_to_embed.append(types.Part.from_bytes(data=item["raw_data"], mime_type=item.get("mime_type", "application/octet-stream")))
             else:
                 items_to_embed.append(item["raw_data"])
             
@@ -177,6 +174,21 @@ async def sync_indexed_directories() -> str:
         return "Sync Summary:\n" + "\n".join(results)
     except Exception as e:
         return f"Error during sync: {str(e)}"
+
+@mcp.resource("gemini://database-stats")
+def get_database_stats() -> str:
+    """Returns the scale and health of the ChromaDB index for Gemini."""
+    try:
+        db = get_db()
+        sources = db.list_indexed_sources()
+        try:
+            count = db.collection.count()
+        except:
+            count = "Unknown"
+            
+        return f"Database stats:\n- Total Indexed Vector Segments: {count}\n- Total Indexed Parent Files: {len(sources)}\n"
+    except Exception as e:
+        return f"Database unavailable: {str(e)}"
 
 def main():
     """Entry point for the MCP server when run as a script."""

@@ -4,10 +4,10 @@ A powerful Model Context Protocol (MCP) server that connects your local document
 
 ## Features
 - **Local Vector Database**: Uses ChromaDB entirely locally to index your document embeddings.
-- **Multimodal Embedding Power**: Powered by `gemini-embedding-2-preview`, Google's latest embedding model.
-- **Native Image Search**: Scans and mathematically embeds `.jpg`, `.png`, and `.webp` graphics. Search context visually!
-- **Dynamic Indexing**: Read, parse, and embed PDF, TXT, MD, DOCX files directly from Claude's interface.
-- **Semantic Search**: Native MCP tool for lighting-fast semantic retrieval over your documents.
+- **Enterprise-Grade Embeddings**: Uses `gemini-embedding-2-preview` with specialized Task Types (`RETRIEVAL_DOCUMENT`) and MRL dimensionality optimization.
+- **Ultimate Multimodality**: Natively scans, embeds, and mathematically retrieves **Images** (`.jpg`, `.png`, `.webp`), **Video** (`.mp4`), and **Audio** (`.mp3`, `.wav`)! Search your memories visually and sonically.
+- **Dynamic File Indexing**: Read, parse, and embed PDF, TXT, MD, DOCX files directly from Claude's interface.
+- **Semantic Search**: Native MCP tool for lighting-fast semantic retrieval over your multimodal files.
 
 ## Installation
 
@@ -42,14 +42,19 @@ uv sync
 }
 ```
 
-## Available MCP Tools
+## Available MCP Tools & Resources
 
+### MCP Tools
 Once connected, Claude will have access to:
-- `index_directory(path: str)`: Scan and structurally embed a local folder (reads text AND images).
-- `search_my_documents(query: str, limit: int)`: Perform semantic search over your indexed documents and pictures.
+- `index_directory(path: str)`: Scan and structurally embed a local folder (reads text, images, video, and audio natively).
+- `search_my_documents(query: str, limit: int)`: Perform semantic search over your indexed documents and media.
 - `list_indexed_directories()`: See what files have been embedded.
 - `sync_indexed_directories()`: Automatically re-indexes known folders to capture newly added files.
 - `remove_directory_from_index(path: str)`: Remove a folder's vectors from your ChromaDB instance.
+
+### MCP Resources
+Claude can instantly inspect the health and scale of your database without invoking a tool call via:
+- `gemini://database-stats`: Returns the total count of vectorized segments and indexed files.
 
 ## License
 MIT

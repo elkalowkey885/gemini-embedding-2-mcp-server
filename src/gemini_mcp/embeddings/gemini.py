@@ -22,25 +22,26 @@ class GeminiEmbeddingClient:
         # Initialize the new google-genai SDK client
         self.client = genai.Client(api_key=self.api_key)
         
-    def embed_items(self, items: List[Any]) -> List[List[float]]:
+    def embed_items(self, items: List[Any], task_type: str = "RETRIEVAL_DOCUMENT", output_dimensionality: int = 768) -> List[List[float]]:
         """
-        Sends a batch of items (strings, or Image bytes represented as types.Part) 
-        to Gemini Tracking 2 to get vector embeddings. 
-        Returns a list of float arrays (the vectors).
+        Sends a batch of items (strings, or multimodality bytes represented as types.Part) 
+        to Gemini Embedding 2.
+        Leverages specific `task_type` and Matryoshka Representation Learning (MRL) dimensions.
         """
         if not items:
             return []
             
         try:
-            # We use embed_content with the required model.
             embeddings = []
             
-            # Since the API sometimes struggles with deeply nested mixed batches or large parallel payloads, 
-            # we iterate through the batch. The `embed_content` takes `contents`.
-            # We can pass them as a list to the SDK
+            # Pass advanced configuration for optimal vector accuracy
             response = self.client.models.embed_content(
                 model=EMBEDDING_MODEL,
-                contents=items
+                contents=items,
+                config=types.EmbedContentConfig(
+                    task_type=task_type,
+                    output_dimensionality=output_dimensionality
+                )
             )
             
             for emb in response.embeddings:
@@ -54,9 +55,9 @@ class GeminiEmbeddingClient:
 
     def embed_query(self, query: str) -> List[float]:
         """
-        Embeds a single semantic search query string.
+        Embeds a single semantic search query utilizing the 'RETRIEVAL_QUERY' task type.
         """
-        res = self.embed_texts([query])
+        res = self.embed_items([query], task_type="RETRIEVAL_QUERY")
         if res:
             return res[0]
         return []
