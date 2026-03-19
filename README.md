@@ -34,6 +34,26 @@ Make sure you have `uv` installed on your machine (`pip install uv`).
 ### Method 1: Zero-Install (Recommended)
 You can point your AI assistant to run the server directly from GitHub without ever cloning the repository locally. `uvx` acts like `npx` for Python, downloading and caching the server in a secure ephemeral environment automatically!
 
+## 🔑 Getting your Gemini API Key
+To power the embedding model, you need a free API key from Google.
+1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
+2. Click **Create API key**.
+3. Copy the key and use it in your client configurations below as `GEMINI_API_KEY`.
+
+---
+
+## 🔌 Client Connection Guides
+
+### 🤖 Claude Code (CLI)
+You can attach this server to the [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview) CLI natively.
+Run the following command in your terminal:
+
+```bash
+claude mcp add gemini-embedding-2-mcp \
+  --env GEMINI_API_KEY="your-api-key-here" \
+  uvx --from git+https://github.com/AlaeddineMessadi/gemini-embedding-2-mcp-server.git gemini-embedding-2-mcp
+```
+
 ### 🦋 Claude Desktop
 Open your Claude Desktop config file (usually `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS) and add:
 ```json
